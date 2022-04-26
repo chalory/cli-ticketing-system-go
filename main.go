@@ -35,21 +35,51 @@ func main() {
 		fmt.Println("Enter number of tickets: ")
 		fmt.Scan(&userTickets)
 
-		remainingTickets = remainingTickets - userTickets
-		bookings = append(bookings, firstName+" "+lastName)
+		isValidName := len(firstName) >= 2 && len(lastName) >= 2
+		isvalidEmail := strings.Contains(email, "@")
+		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
 
-		fmt.Printf("The whole slice: %v\n", bookings)
-		fmt.Printf("slice type: %T\n", bookings)
-		fmt.Printf("Length: %v\n", len(bookings))
+		if isValidName && isvalidEmail && isValidTicketNumber {
 
-		fmt.Printf("Thank you %v %v for booking %v tickets. You will recieve a confirmation email in %v.\n", firstName, lastName, userTickets, email)
-		fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
-		firstNames := []string{}
-		for _, booking := range bookings {
-			var names = strings.Fields(booking)
-			firstNames = append(firstNames, names[0])
+			if userTickets <= remainingTickets {
+				remainingTickets = remainingTickets - userTickets
+				bookings = append(bookings, firstName+" "+lastName)
+
+				fmt.Printf("Thank you %v %v for booking %v tickets. You will recieve a confirmation email in %v.\n", firstName, lastName, userTickets, email)
+				fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+				firstNames := []string{}
+				for _, booking := range bookings {
+					var names = strings.Fields(booking)
+					var firstName = names[0]
+					firstNames = append(firstNames, firstName)
+				}
+				fmt.Printf("The first names of bookings are %v\n", firstNames)
+
+				if remainingTickets == 0 {
+					// if there are no more tickets, end program
+					fmt.Println("Our conference is booked out. Come back next year")
+					break
+				}
+			}
+
+		} else {
+
+			if !isValidName {
+				fmt.Println("first name or last name is too short.\n")
+
+			}
+
+			if !isvalidEmail {
+				fmt.Printf("The email that you entered was invalid.\n")
+
+			}
+
+			if !isValidTicketNumber {
+				fmt.Printf("Number that you entered was invalid.\n")
+			}
+			fmt.Printf("Your input data is invalid, try again\n")
+
 		}
-		fmt.Printf("The first names of bookings are %v\n", firstNames)
 	}
 
 }
